@@ -10,19 +10,13 @@ import org.jsoup.nodes.Document;
  */
 public class AsyncClass extends AsyncTask<String, Void, String> {
     public AsyncResponse delegate = null;
-
-    public String title = "Default Text";
-//        private RemoteViews remoteView;
-
-//        public getTimings(RemoteViews remoteViews) {
-//            this.remoteView = remoteViews;
-//        }
+    String title;
 
     @Override
     protected String doInBackground(String... params) {
         try {
-//            Document document = Jsoup.connect(params[0]).get();
-            title = "Document.title() Fetched";
+            Document document = Jsoup.connect(params[0]).get();
+            title = document.title();
         } catch (Exception e) {
             title = "Error Fetching";
             e.printStackTrace();
