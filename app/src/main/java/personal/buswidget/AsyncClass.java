@@ -1,13 +1,11 @@
 package personal.buswidget;
 
-import android.app.Application;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -20,9 +18,9 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class AsyncClass extends AsyncTask<Void, Void, String> {
     public AsyncResponse delegate = null;
-    String appID = "*** Enter your appID from OCTranspo account ***";
-    String appKey = "*** Enter your appKey from OCTranspo account ***";
-    String stopNo = "6410";
+    String OCTranspoAppID = "*** Enter your appID from OCTranspo account ***";
+    String OCTranspoAppKey = "*** Enter your appKey from OCTranspo account ***";
+    String stopNo = "3017";
     String routeNo = "85";
 
     @Override
@@ -31,12 +29,11 @@ public class AsyncClass extends AsyncTask<Void, Void, String> {
         String routeSummaryParam = "appID=" + appID + "&apiKey=" + appKey + "&stopNo=" + stopNo;
         String nextTrip = "https://api.octranspo1.com/v1.2/GetNextTripsForStop";
         String nextTripParam = "appID=" + appID + "&apiKey=" + appKey + "routeNo" + routeNo + "&stopNo=" + stopNo;
+        final String ns = null;
+
 
         try {
-            Log.d("", "Crafting URL...");
             URL url = new URL(routeSummary);
-            Log.d("Crafting URL", "Done");
-            Log.d("", "Opening HttpsConnection String...");
             HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
             urlConnection.setRequestMethod("POST");
             urlConnection.setDoOutput(true);
@@ -48,7 +45,6 @@ public class AsyncClass extends AsyncTask<Void, Void, String> {
             final StringBuilder output = new StringBuilder("Request URL " + url);
             output.append(System.getProperty("line.separator") + "Request Parameters " + routeSummaryParam);
             output.append(System.getProperty("line.separator") + "Response Code " + responseCode);
-            Log.d("Opening HttpsConnection", "Done");
             try {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 StringBuilder stringBuilder = new StringBuilder();
@@ -58,14 +54,14 @@ public class AsyncClass extends AsyncTask<Void, Void, String> {
                 }
                 bufferedReader.close();
                 Log.d("OUPUT:::::", stringBuilder.toString());
-                return "OUTPUT";
+                InputStream ip = new ByteArrayInputStream(stringBuilder.toString().getBytes());
+                ParseXML parseXML = new ParseXML();
+                return parseXML.parseXML(ip);
             } catch (Exception e) {
                 e.printStackTrace();
                 return "Exception Occured while StringBuilder!";
             } finally {
-                Log.d("", "Closing HttpsConnection...");
                 urlConnection.disconnect();
-                Log.d("Closing HttpsConnection", "Done");
             }
         } catch (Exception e) {
             e.printStackTrace();
