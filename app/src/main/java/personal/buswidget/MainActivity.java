@@ -5,12 +5,17 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
+import android.widget.PopupWindow;
 import android.widget.RemoteViews;
 
 public class MainActivity extends AppWidgetProvider implements AsyncResponse {
-    public static String asyncOutput;
+    public static String asyncOutput = "";
+    private static final String settingClicked = "SettingsButton";
     RemoteViews remoteViews;
     int widgetId;
+    private PopupWindow fetchRouteInfo;
+    Intent myConfigIntent;
 
 //    public static int counter =0;
 //    Static only makes one copy for counter variable and hence broadcast receiver would be changing one variable only
@@ -22,33 +27,73 @@ public class MainActivity extends AppWidgetProvider implements AsyncResponse {
     AsyncClass getResults = new AsyncClass();
 
     @Override
+    public void onEnabled(Context context) {
+        super.onEnabled(context);
+
+    }
+
+    //As soon as the widget is place on screen, this method will run
+    @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         //this to set delegate/listener back to this class
         getResults.delegate = this;
         //execute the async task
         getResults.execute();
-//        Update procedure for the widget
+
         final int count = appWidgetIds.length;
         for (int i = 0; i < count; i++) {
             widgetId = appWidgetIds[i];
             remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-            remoteViews.setTextViewText(R.id.textView_Char, asyncOutput);
+            if (!asyncOutput.isEmpty()) {
+                Log.d("OUTPUT", asyncOutput);
+                String[] populateTextView = asyncOutput.split("@");
+                remoteViews.setTextViewText(R.id.busNo, populateTextView[2]);
+                remoteViews.setTextViewText(R.id.busDest, populateTextView[3]);
+                remoteViews.setTextViewText(R.id.stopNo, populateTextView[0]);
+                remoteViews.setTextViewText(R.id.stopName, populateTextView[1]);
+                remoteViews.setTextViewText(R.id.speed, populateTextView[4] + "Km/h");
+                remoteViews.setTextViewText(R.id.etaTime, populateTextView[5] + "  ETA");
+            }
 
-            Intent intent = new Intent(context, MainActivity.class);
-            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+            Intent updateIntent = new Intent(context, MainActivity.class);
+            updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+            PendingIntent pendingUpdateIntent = PendingIntent.getBroadcast(context, 0, updateIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            remoteViews.setOnClickPendingIntent(R.id.refreshButton, pendingUpdateIntent);
+            appWidgetManager.updateAppWidget(widgetId, remoteViews);
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            remoteViews.setOnClickPendingIntent(R.id.textView_No, pendingIntent);
+            Intent configIntent = new Intent(context, widgetConfig.class);
+            configIntent.setAction("SettingsButton");
+            PendingIntent pendingConfigIntent = PendingIntent.getActivity(context, 0,
+                    configIntent, 0);
+            ;
+            remoteViews.setOnClickPendingIntent(R.id.settingButton, pendingConfigIntent);
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
         }
     }
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        if (settingClicked.equals(intent.getAction())) {
+            PendingIntent pendingConfigIntent = PendingIntent.getActivity(context, 0,
+                    intent, 0);
+            try {
+                pendingConfigIntent.send();
+            } catch (PendingIntent.CanceledException e) {
+                e.printStackTrace();
+                Log.d("pendingIntent", "Config Activity Canceled");
+            }
+        }
+    }
+
+    //    Here you will receive the result fired from AsyncClass of onPostExecute(result) method.
     public void processFinish(String output) {
-        //Here you will receive the result fired from AsyncClass of onPostExecute(result) method.
         asyncOutput = output;
     }
 }
+
 
 

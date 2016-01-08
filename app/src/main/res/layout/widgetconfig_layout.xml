@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/stopNo"
+            android:text="Stop#"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/chooseStop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="write stop number"
+            android:editable="false"
+            android:inputType="number"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/routeNo"
+            android:text="Route#"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/chooseRoute"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="write bus number"
+            android:editable="false"
+            android:inputType="number"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/chooseDest"
+            android:text="Direction"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="20sp" />
+
+        <Spinner
+            android:id="@+id/routeDest"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:spinnerMode="dropdown">
+
+        </Spinner>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/createWidget"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Create-Widget"
+        style="@android:style/@android:style/ButtonBar"
+        android:allowUndo="true"
+        android:background="#d6ebed"
+        android:textColor="#060606"
+        android:layout_margin="10dp"
+        android:focusable="true"
+        android:singleLine="false"
+        android:textStyle="bold"
+        android:textSize="30sp" />
+</LinearLayout>

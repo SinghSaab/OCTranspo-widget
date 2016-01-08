@@ -20,7 +20,9 @@ public class AsyncClass extends AsyncTask<Void, Void, String> {
     public AsyncResponse delegate = null;
     String OCTranspoAppID = "*** Enter your appID from OCTranspo account ***";
     String OCTranspoAppKey = "*** Enter your appKey from OCTranspo account ***";
-    String stopNo = "3017";
+    String appID = "75feca88";
+    String appKey = "e7967a9d497cfa269c16e31b7a498a12";
+    String stopNo = "6441";
     String routeNo = "85";
 
     @Override
@@ -28,22 +30,20 @@ public class AsyncClass extends AsyncTask<Void, Void, String> {
         String routeSummary = "https://api.octranspo1.com/v1.2/GetRouteSummaryForStop";
         String routeSummaryParam = "appID=" + appID + "&apiKey=" + appKey + "&stopNo=" + stopNo;
         String nextTrip = "https://api.octranspo1.com/v1.2/GetNextTripsForStop";
-        String nextTripParam = "appID=" + appID + "&apiKey=" + appKey + "routeNo" + routeNo + "&stopNo=" + stopNo;
-        final String ns = null;
-
+        String nextTripParam = "appID=" + appID + "&apiKey=" + appKey + "&routeNo=" + routeNo + "&stopNo=" + stopNo;
 
         try {
-            URL url = new URL(routeSummary);
+            URL url = new URL(nextTrip);
             HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
             urlConnection.setRequestMethod("POST");
             urlConnection.setDoOutput(true);
             DataOutputStream dStream = new DataOutputStream(urlConnection.getOutputStream());
-            dStream.writeBytes(routeSummaryParam);
+            dStream.writeBytes(nextTripParam);
             dStream.flush();
             dStream.close();
             int responseCode = urlConnection.getResponseCode();
             final StringBuilder output = new StringBuilder("Request URL " + url);
-            output.append(System.getProperty("line.separator") + "Request Parameters " + routeSummaryParam);
+            output.append(System.getProperty("line.separator") + "Request Parameters " + nextTripParam);
             output.append(System.getProperty("line.separator") + "Response Code " + responseCode);
             try {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
