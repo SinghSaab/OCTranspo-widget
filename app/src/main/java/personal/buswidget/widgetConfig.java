@@ -36,7 +36,7 @@ public class widgetConfig extends Activity implements AdapterView.OnItemSelected
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.x = -100;
         params.height = 670;
-        params.width = 750;
+        params.width = 760;
         params.y = -50;
         this.getWindow().setAttributes(params);
 
@@ -48,7 +48,7 @@ public class widgetConfig extends Activity implements AdapterView.OnItemSelected
         TextView textView_R= (TextView) findViewById(R.id.routeNo);
         TextView textView_D= (TextView) findViewById(R.id.chooseDest);
         final EditText editText_S= (EditText) findViewById(R.id.chooseStop);
-        EditText editText_R= (EditText) findViewById(R.id.chooseRoute);
+        final EditText editText_R= (EditText) findViewById(R.id.chooseRoute);
         Button createWidget = (Button) findViewById(R.id.createWidget);
 
         // Spinner element
@@ -75,25 +75,26 @@ public class widgetConfig extends Activity implements AdapterView.OnItemSelected
         // attaching data adapter to spinner
         spinner.setAdapter(dataAdapter);
 
+
+
 //      This will return the extra value from the intent
         Bundle extras = getIntent().getExtras();
         if(extras!=null) {
 //            To make sure that the widget id is returned to us for making changes
             widgetID = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         }
-//        get the context of AppWidgetManager to force make changes to widget
+//        get the context of AppWidgetManager to  make changes toforce widget
         final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.activity_main);
 
         createWidget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("OnCLickLIstener","Button Clicked");
+                Log.d("OnCLickLIstener", "Button Clicked");
+                Bundle configBundle = new Bundle();
+                configBundle.putString("stopNoFromConfig", String.valueOf(editText_S.getText()));
+                configBundle.putString("routeNoFromConfig", String.valueOf(editText_R.getText()));
                 finish();
-//                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(editText_S.toString()));
-//                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-//                remoteViews.setOnClickPendingIntent(R.id.refreshButton, pendingIntent);
-//                appWidgetManager.updateAppWidget(widgetID, remoteViews);
             }
         });
     }

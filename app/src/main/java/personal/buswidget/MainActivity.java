@@ -5,18 +5,16 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
-import android.widget.PopupWindow;
 import android.widget.RemoteViews;
 
 public class MainActivity extends AppWidgetProvider implements AsyncResponse {
     public static String asyncOutput = "";
     private static final String settingClicked = "SettingsButton";
+    AppWidgetManager appWidgetManager;
     RemoteViews remoteViews;
     int widgetId;
-    private PopupWindow fetchRouteInfo;
-    Intent myConfigIntent;
-
 //    public static int counter =0;
 //    Static only makes one copy for counter variable and hence broadcast receiver would be changing one variable only
 //    Else, it will keep the value reserving back to zero whenever onUpdate() would be called
@@ -25,12 +23,6 @@ public class MainActivity extends AppWidgetProvider implements AsyncResponse {
 //    Create instance of the AsyncTask class
 
     AsyncClass getResults = new AsyncClass();
-
-    @Override
-    public void onEnabled(Context context) {
-        super.onEnabled(context);
-
-    }
 
     //As soon as the widget is place on screen, this method will run
     @Override
@@ -56,6 +48,7 @@ public class MainActivity extends AppWidgetProvider implements AsyncResponse {
                 remoteViews.setTextViewText(R.id.etaTime, populateTextView[5] + "  ETA");
             }
 
+//            Intent for updating widget whenever changes occurs
             Intent updateIntent = new Intent(context, MainActivity.class);
             updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
@@ -64,6 +57,7 @@ public class MainActivity extends AppWidgetProvider implements AsyncResponse {
             remoteViews.setOnClickPendingIntent(R.id.refreshButton, pendingUpdateIntent);
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
 
+//            Intent for updating widget whenever changes occurs
             Intent configIntent = new Intent(context, widgetConfig.class);
             configIntent.setAction("SettingsButton");
             PendingIntent pendingConfigIntent = PendingIntent.getActivity(context, 0,
@@ -74,6 +68,7 @@ public class MainActivity extends AppWidgetProvider implements AsyncResponse {
         }
     }
 
+//    onReceive the broadcast to configure the widget. There's an entry in Manifest file as well.
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
