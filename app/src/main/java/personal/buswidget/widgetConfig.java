@@ -50,6 +50,7 @@ public class widgetConfig extends Activity implements AdapterView.OnItemSelected
         final EditText editText_S= (EditText) findViewById(R.id.chooseStop);
         final EditText editText_R= (EditText) findViewById(R.id.chooseRoute);
         Button createWidget = (Button) findViewById(R.id.createWidget);
+        final Bundle configBundle = new Bundle();
 
         // Spinner element
         Spinner spinner = (Spinner) findViewById(R.id.routeDest);
@@ -87,13 +88,15 @@ public class widgetConfig extends Activity implements AdapterView.OnItemSelected
         final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.activity_main);
 
+        final Intent runMainActivity = new Intent(context, MainActivity.class);
         createWidget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("OnCLickLIstener", "Button Clicked");
-                Bundle configBundle = new Bundle();
                 configBundle.putString("stopNoFromConfig", String.valueOf(editText_S.getText()));
                 configBundle.putString("routeNoFromConfig", String.valueOf(editText_R.getText()));
+                runMainActivity.putExtras(configBundle);
+                startActivity(runMainActivity);
                 finish();
             }
         });

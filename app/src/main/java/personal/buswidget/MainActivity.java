@@ -12,6 +12,7 @@ import android.widget.RemoteViews;
 public class MainActivity extends AppWidgetProvider implements AsyncResponse {
     public static String asyncOutput = "";
     private static final String settingClicked = "SettingsButton";
+    private static final String refreshClicked = "RefreshButton";
     AppWidgetManager appWidgetManager;
     RemoteViews remoteViews;
     int widgetId;
@@ -46,11 +47,14 @@ public class MainActivity extends AppWidgetProvider implements AsyncResponse {
                 remoteViews.setTextViewText(R.id.stopName, populateTextView[1]);
                 remoteViews.setTextViewText(R.id.speed, populateTextView[4] + "Km/h");
                 remoteViews.setTextViewText(R.id.etaTime, populateTextView[5] + "  ETA");
+            } else {
+//                on very first install, if no data is saved; show the dialog
+                remoteViews.setTextViewText(R.id.stopName, "Refresh To Update");
             }
 
 //            Intent for updating widget whenever changes occurs
             Intent updateIntent = new Intent(context, MainActivity.class);
-            updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            updateIntent.setAction("RefreshButton");
             updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
             PendingIntent pendingUpdateIntent = PendingIntent.getBroadcast(context, 0, updateIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
@@ -81,6 +85,9 @@ public class MainActivity extends AppWidgetProvider implements AsyncResponse {
                 e.printStackTrace();
                 Log.d("pendingIntent", "Config Activity Canceled");
             }
+        }
+        if(refreshClicked.equals(intent.getAction())) {
+
         }
     }
 

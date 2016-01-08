@@ -20,8 +20,6 @@ public class AsyncClass extends AsyncTask<Void, Void, String> {
     public AsyncResponse delegate = null;
     String OCTranspoAppID = "*** Enter your appID from OCTranspo account ***";
     String OCTranspoAppKey = "*** Enter your appKey from OCTranspo account ***";
-    String appID = "75feca88";
-    String appKey = "e7967a9d497cfa269c16e31b7a498a12";
     String stopNo = "6441";
     String routeNo = "85";
 
